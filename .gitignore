@@ -149,3 +149,6 @@ vite.config.ts.timestamp-*
 /.mf
 .shopify
 .react-router
+.vscode
+.DS_Store
+**/.DS_Store
