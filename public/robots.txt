@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Block account & cart from indexing
+Disallow: /account
+Disallow: /cart
+Disallow: /search
