@@ -14,7 +14,10 @@ import type {
 } from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: `Hydrogen | Search`}];
+  return [
+    {title: 'Search — Certified Nutrition Store'},
+    {name: 'robots', content: 'noindex'},
+  ];
 };
 
 export async function loader({request, context}: Route.LoaderArgs) {
@@ -41,8 +44,12 @@ export default function SearchPage() {
   if (type === 'predictive') return null;
 
   return (
-    <div className="search">
+    <section className="container-wide search">
+      <span className="badge-soft">Search</span>
       <h1>Search</h1>
+      <p className="collection-description">
+        Search products, articles, and store pages.
+      </p>
       <SearchForm>
         {({inputRef}) => (
           <>
@@ -53,12 +60,13 @@ export default function SearchPage() {
               ref={inputRef}
               type="search"
             />
-            &nbsp;
-            <button type="submit">Search</button>
+            <button className="focus-ring" type="submit">
+              Search
+            </button>
           </>
         )}
       </SearchForm>
-      {error && <p style={{color: 'red'}}>{error}</p>}
+      {error && <p className="product-copy-card">{error}</p>}
       {!term || !result?.total ? (
         <SearchResults.Empty />
       ) : (
@@ -73,7 +81,7 @@ export default function SearchPage() {
         </SearchResults>
       )}
       <Analytics.SearchView data={{searchTerm: term, searchResults: result}} />
-    </div>
+    </section>
   );
 }
 

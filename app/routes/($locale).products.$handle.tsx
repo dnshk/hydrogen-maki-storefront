@@ -15,7 +15,16 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [
-    {title: `Hydrogen | ${data?.product.title ?? ''}`},
+    {
+      title: `${data?.product.title ?? 'Product'} — Certified Nutrition Store`,
+    },
+    {
+      name: 'description',
+      content:
+        data?.product.seo?.description ??
+        data?.product.description ??
+        'Practitioner-curated supplement.',
+    },
     {
       rel: 'canonical',
       href: `/products/${data?.product.handle}`,
@@ -95,31 +104,37 @@ export default function Product() {
     selectedOrFirstAvailableVariant: selectedVariant,
   });
 
-  const {title, descriptionHtml} = product;
+  const {title, descriptionHtml, vendor} = product;
 
   return (
-    <div className="product">
+    <div className="container-wide product">
       <ProductImage image={selectedVariant?.image} />
-      <div className="product-main">
+      <section className="product-main">
+        {vendor ? <div className="product-vendor">{vendor}</div> : null}
         <h1>{title}</h1>
         <ProductPrice
           price={selectedVariant?.price}
           compareAtPrice={selectedVariant?.compareAtPrice}
         />
-        <br />
+        <div
+          className="product-description"
+          dangerouslySetInnerHTML={{__html: descriptionHtml}}
+        />
         <ProductForm
           productOptions={productOptions}
           selectedVariant={selectedVariant}
         />
-        <br />
-        <br />
-        <p>
-          <strong>Description</strong>
+        <ul className="product-trust-list">
+          <li>✓ Secure Shopify checkout</li>
+          <li>✓ Ships from Canada</li>
+          <li>✓ Vetted by a certified nutrition practitioner</li>
+        </ul>
+        <p className="product-copy-card">
+          Information is for educational purposes and is not medical advice.
+          Consult a healthcare professional before use, especially if pregnant,
+          nursing, taking medication, or managing a health condition.
         </p>
-        <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-        <br />
-      </div>
+      </section>
       <Analytics.ProductView
         data={{
           products: [

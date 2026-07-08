@@ -37,20 +37,28 @@ export function PageLayout({
       <CartAside cart={cart} />
       <SearchAside />
       <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
-      {header && (
-        <Header
+      <div className="site-shell">
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
+        <AnnouncementBar />
+        {header && (
+          <Header
+            header={header}
+            cart={cart}
+            isLoggedIn={isLoggedIn}
+            publicStoreDomain={publicStoreDomain}
+          />
+        )}
+        <main id="main" className="site-main">
+          {children}
+        </main>
+        <Footer
+          footer={footer}
           header={header}
-          cart={cart}
-          isLoggedIn={isLoggedIn}
           publicStoreDomain={publicStoreDomain}
         />
-      )}
-      <main>{children}</main>
-      <Footer
-        footer={footer}
-        header={header}
-        publicStoreDomain={publicStoreDomain}
-      />
+      </div>
     </Aside.Provider>
   );
 }
@@ -74,7 +82,6 @@ function SearchAside() {
   return (
     <Aside type="search" heading="SEARCH">
       <div className="predictive-search">
-        <br />
         <SearchFormPredictive>
           {({fetchResults, goToSearch, inputRef}) => (
             <>
@@ -87,8 +94,9 @@ function SearchAside() {
                 type="search"
                 list={queriesDatalistId}
               />
-              &nbsp;
-              <button onClick={goToSearch}>Search</button>
+              <button type="button" onClick={goToSearch}>
+                Search
+              </button>
             </>
           )}
         </SearchFormPredictive>
@@ -148,6 +156,20 @@ function SearchAside() {
         </SearchResultsPredictive>
       </div>
     </Aside>
+  );
+}
+
+function AnnouncementBar() {
+  return (
+    <div className="announcement-bar">
+      <div className="container-wide announcement-bar__inner">
+        <span>Canada-based supplement support</span>
+        <span aria-hidden>·</span>
+        <span>Shipping options to Japan</span>
+        <span aria-hidden>·</span>
+        <span>Secure Shopify checkout</span>
+      </div>
+    </div>
   );
 }
 

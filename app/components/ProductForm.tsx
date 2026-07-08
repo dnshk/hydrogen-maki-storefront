@@ -46,18 +46,15 @@ export function ProductForm({
                   // as an anchor tag
                   return (
                     <Link
-                      className="product-options-item"
+                      className={`product-options-item focus-ring${
+                        selected ? ' is-selected' : ''
+                      }`}
                       key={option.name + name}
                       prefetch="intent"
                       preventScrollReset
                       replace
                       to={`/products/${handle}?${variantUriQuery}`}
-                      style={{
-                        border: selected
-                          ? '1px solid black'
-                          : '1px solid transparent',
-                        opacity: available ? 1 : 0.3,
-                      }}
+                      aria-disabled={!available}
                     >
                       <ProductOptionSwatch swatch={swatch} name={name} />
                     </Link>
@@ -71,16 +68,13 @@ export function ProductForm({
                   return (
                     <button
                       type="button"
-                      className={`product-options-item${
+                      className={`product-options-item focus-ring${
+                        selected ? ' is-selected' : ''
+                      }${
                         exists && !selected ? ' link' : ''
                       }`}
                       key={option.name + name}
-                      style={{
-                        border: selected
-                          ? '1px solid black'
-                          : '1px solid transparent',
-                        opacity: available ? 1 : 0.3,
-                      }}
+                      aria-pressed={selected}
                       disabled={!exists}
                       onClick={() => {
                         if (!selected) {
