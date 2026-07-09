@@ -26,8 +26,8 @@ export function ProductItem({
       prefetch="intent"
       to={variantUrl}
     >
-      {image && (
-        <div className="product-item__image">
+      <div className="product-item__image">
+        {image ? (
           <Image
             alt={image.altText || product.title}
             aspectRatio="1/1"
@@ -35,8 +35,10 @@ export function ProductItem({
             loading={loading}
             sizes="(min-width: 64em) 25vw, 50vw"
           />
-        </div>
-      )}
+        ) : (
+          <span className="product-item__image-placeholder" aria-hidden />
+        )}
+      </div>
       <div className="product-item__content">
         <h3>{product.title}</h3>
         <div className="product-item__price">
