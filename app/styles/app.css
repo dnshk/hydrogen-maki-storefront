@@ -41,6 +41,10 @@
   --page-hero-padding-y: 2.5rem;
   --home-hero-padding-bottom: 5rem;
   --home-hero-padding-bottom-lg: 8rem;
+  --hero-heading-line-height: 1.05;
+  --hero-copy-font-size: 1.05rem;
+  --hero-copy-line-height: 1.75;
+  --section-heading-line-height: 1.12;
 }
 
 html {
@@ -554,7 +558,7 @@ aside main {
 
 .home-hero h1 {
   font-size: clamp(2.5rem, 7vw, 4.25rem);
-  line-height: 1.05;
+  line-height: var(--hero-heading-line-height);
   margin: 1.25rem 0 0;
 }
 
@@ -565,8 +569,8 @@ aside main {
 
 .home-hero p {
   color: hsl(var(--foreground) / 0.75);
-  font-size: 1.05rem;
-  line-height: 1.75;
+  font-size: var(--hero-copy-font-size);
+  line-height: var(--hero-copy-line-height);
   margin-top: 1.25rem;
   max-width: 36rem;
 }
@@ -679,7 +683,7 @@ aside main {
 
 .section-heading h2 {
   font-size: clamp(2rem, 4vw, 2.6rem);
-  line-height: 1.12;
+  line-height: var(--section-heading-line-height);
   margin: 0.8rem 0 0;
 }
 
@@ -889,19 +893,22 @@ aside main {
 .search h1,
 .cart-page h1 {
   font-size: clamp(2.4rem, 5vw, 3.4rem);
-  line-height: 1.05;
-  margin: 0;
+  line-height: var(--hero-heading-line-height);
+  margin: 1.25rem 0 0;
 }
 
 .collection-description {
-  line-height: 1.7;
-  margin-top: 0.9rem;
+  color: hsl(var(--foreground) / 0.75);
+  font-size: var(--hero-copy-font-size);
+  line-height: var(--hero-copy-line-height);
+  margin-top: 1.25rem;
   max-width: 42rem;
 }
 
 .page-content {
-  color: hsl(var(--foreground) / 0.82);
-  line-height: 1.8;
+  color: hsl(var(--foreground) / 0.78);
+  font-size: var(--hero-copy-font-size);
+  line-height: var(--hero-copy-line-height);
   padding-block: 3.5rem 5rem;
 }
 
@@ -913,7 +920,7 @@ aside main {
 .page-content h3,
 .page-content h4 {
   color: hsl(var(--foreground));
-  line-height: 1.2;
+  line-height: var(--section-heading-line-height);
   margin-top: 2.25rem;
 }
 

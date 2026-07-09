@@ -107,7 +107,7 @@ function TrustBar() {
     ['🌿', 'Canadian business', 'Small, practitioner-led'],
     ['🔒', 'Secure Shopify checkout', 'PCI-DSS compliant'],
     ['✈️', 'Shipping to Japan', 'Eligible items shipped'],
-    ['✚', 'Practitioner-guided', 'Education, not diagnosis'],
+    ['✚', 'Practitioner-guided', 'Education over diagnosis'],
   ];
 
   return (
