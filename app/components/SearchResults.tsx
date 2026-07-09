@@ -157,5 +157,9 @@ function SearchResultsProducts({
 }
 
 function SearchResultsEmpty() {
-  return <p>No results, try a different search.</p>;
+  return (
+    <div className="empty-state">
+      <p className="muted">No results yet. Try a product, brand, or topic.</p>
+    </div>
+  );
 }

@@ -1,5 +1,5 @@
 import {Suspense} from 'react';
-import {Await, NavLink, useAsyncValue} from 'react-router';
+import {Await, Link, NavLink, useAsyncValue} from 'react-router';
 import {
   type CartViewPayload,
   useAnalytics,
@@ -26,16 +26,19 @@ export function Header({
   const {shop, menu} = header;
   return (
     <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
-      </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-      />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      <div className="container-wide header__inner">
+        <NavLink className="header__logo focus-ring" prefetch="intent" to="/" end>
+          Certified Nutrition <span>Store</span>
+          <span className="sr-only">, {shop.name}</span>
+        </NavLink>
+        <HeaderMenu
+          menu={menu}
+          viewport="desktop"
+          primaryDomainUrl={header.shop.primaryDomain.url}
+          publicStoreDomain={publicStoreDomain}
+        />
+        <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      </div>
     </header>
   );
 }
@@ -55,13 +58,17 @@ export function HeaderMenu({
   const {close} = useAside();
 
   return (
-    <nav className={className} role="navigation">
+    <nav
+      className={className}
+      role="navigation"
+      aria-label={viewport === 'mobile' ? 'Mobile' : 'Primary'}
+    >
       {viewport === 'mobile' && (
         <NavLink
+          className={navLinkClassName}
           end
           onClick={close}
           prefetch="intent"
-          style={activeLinkStyle}
           to="/"
         >
           Home
@@ -79,12 +86,11 @@ export function HeaderMenu({
             : item.url;
         return (
           <NavLink
-            className="header-menu-item"
+            className={navLinkClassName}
             end
             key={item.id}
             onClick={close}
             prefetch="intent"
-            style={activeLinkStyle}
             to={url}
           >
             {item.title}
@@ -100,14 +106,22 @@ function HeaderCtas({
   cart,
 }: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
   return (
-    <nav className="header-ctas" role="navigation">
+    <nav className="header-ctas" role="navigation" aria-label="Store actions">
       <HeaderMenuMobileToggle />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        <Suspense fallback="Sign in">
-          <Await resolve={isLoggedIn} errorElement="Sign in">
-            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
-          </Await>
-        </Suspense>
+      <NavLink
+        aria-label="Account"
+        className="header-icon-button focus-ring"
+        prefetch="intent"
+        to="/account"
+      >
+        <Icon name="user" />
+        <span className="sr-only">
+          <Suspense fallback="Sign in">
+            <Await resolve={isLoggedIn} errorElement="Sign in">
+              {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
+            </Await>
+          </Suspense>
+        </span>
       </NavLink>
       <SearchToggle />
       <CartToggle cart={cart} />
@@ -119,10 +133,12 @@ function HeaderMenuMobileToggle() {
   const {open} = useAside();
   return (
     <button
-      className="header-menu-mobile-toggle reset"
+      className="header-icon-button header-menu-mobile-toggle focus-ring"
+      type="button"
       onClick={() => open('mobile')}
+      aria-label="Open menu"
     >
-      <h3>☰</h3>
+      <Icon name="menu" />
     </button>
   );
 }
@@ -130,8 +146,14 @@ function HeaderMenuMobileToggle() {
 function SearchToggle() {
   const {open} = useAside();
   return (
-    <button className="reset" onClick={() => open('search')}>
-      Search
+    <button
+      className="header-icon-button focus-ring"
+      type="button"
+      onClick={() => open('search')}
+      aria-label="Open search"
+    >
+      <span className="sr-only">Search</span>
+      <Icon name="search" />
     </button>
   );
 }
@@ -141,8 +163,10 @@ function CartBadge({count}: {count: number}) {
   const {publish, shop, cart, prevCart} = useAnalytics();
 
   return (
-    <a
-      href="/cart"
+    <Link
+      aria-label={`Cart, ${count} items`}
+      className="header-icon-button focus-ring"
+      to="/cart"
       onClick={(e) => {
         e.preventDefault();
         open('cart');
@@ -154,8 +178,11 @@ function CartBadge({count}: {count: number}) {
         } as CartViewPayload);
       }}
     >
-      Cart <span aria-label={`(items: ${count})`}>{count}</span>
-    </a>
+      <Icon name="bag" />
+      <span className="cart-count-badge" aria-hidden>
+        {count}
+      </span>
+    </Link>
   );
 }
 
@@ -175,6 +202,68 @@ function CartBanner() {
   return <CartBadge count={cart?.totalQuantity ?? 0} />;
 }
 
+function Icon({name}: {name: 'bag' | 'menu' | 'search' | 'user'}) {
+  const paths = {
+    bag: (
+      <>
+        <path d="M6.5 8.5h11l-1 10h-9l-1-10Z" />
+        <path d="M9 8.5a3 3 0 0 1 6 0" />
+      </>
+    ),
+    menu: (
+      <>
+        <path d="M4 7h16" />
+        <path d="M4 12h16" />
+        <path d="M4 17h16" />
+      </>
+    ),
+    search: (
+      <>
+        <circle cx="10.5" cy="10.5" r="5.5" />
+        <path d="m15 15 5 5" />
+      </>
+    ),
+    user: (
+      <>
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4.5 20a7.5 7.5 0 0 1 15 0" />
+      </>
+    ),
+  };
+
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height="20"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+      viewBox="0 0 24 24"
+      width="20"
+    >
+      {paths[name]}
+    </svg>
+  );
+}
+
+function navLinkClassName({
+  isActive,
+  isPending,
+}: {
+  isActive: boolean;
+  isPending: boolean;
+}) {
+  return [
+    'header-menu-item focus-ring',
+    isActive ? 'is-active' : '',
+    isPending ? 'is-pending' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
+
 const FALLBACK_HEADER_MENU = {
   id: 'gid://shopify/Menu/199655587896',
   items: [
@@ -182,27 +271,27 @@ const FALLBACK_HEADER_MENU = {
       id: 'gid://shopify/MenuItem/461609500728',
       resourceId: null,
       tags: [],
-      title: 'Collections',
-      type: 'HTTP',
-      url: '/collections',
-      items: [],
+        title: 'Shop',
+        type: 'HTTP',
+        url: '/collections/all',
+        items: [],
     },
     {
       id: 'gid://shopify/MenuItem/461609533496',
       resourceId: null,
       tags: [],
-      title: 'Blog',
+      title: 'Consultation',
       type: 'HTTP',
-      url: '/blogs/journal',
+      url: '/pages/consultation',
       items: [],
     },
     {
       id: 'gid://shopify/MenuItem/461609566264',
       resourceId: null,
       tags: [],
-      title: 'Policies',
+      title: 'Learn',
       type: 'HTTP',
-      url: '/policies',
+      url: '/blogs/journal',
       items: [],
     },
     {
@@ -216,16 +305,3 @@ const FALLBACK_HEADER_MENU = {
     },
   ],
 };
-
-function activeLinkStyle({
-  isActive,
-  isPending,
-}: {
-  isActive: boolean;
-  isPending: boolean;
-}) {
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'black',
-  };
-}

@@ -46,20 +46,31 @@ export default function Collections() {
   const {collections} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collections">
-      <h1>Collections</h1>
-      <PaginatedResourceSection<CollectionFragment>
-        connection={collections}
-        resourcesClassName="collections-grid"
-      >
-        {({node: collection, index}) => (
-          <CollectionItem
-            key={collection.id}
-            collection={collection}
-            index={index}
-          />
-        )}
-      </PaginatedResourceSection>
+    <div>
+      <section className="page-hero">
+        <div className="container-wide">
+          <span className="badge-soft">Shop</span>
+          <h1>Collections</h1>
+          <p className="collection-description">
+            Browse practitioner-curated supplement categories and seasonal
+            shelves.
+          </p>
+        </div>
+      </section>
+      <section className="container-wide collections">
+        <PaginatedResourceSection<CollectionFragment>
+          connection={collections}
+          resourcesClassName="collections-grid"
+        >
+          {({node: collection, index}) => (
+            <CollectionItem
+              key={collection.id}
+              collection={collection}
+              index={index}
+            />
+          )}
+        </PaginatedResourceSection>
+      </section>
     </div>
   );
 }
@@ -73,21 +84,26 @@ function CollectionItem({
 }) {
   return (
     <Link
-      className="collection-item"
+      className="collection-item surface-card focus-ring"
       key={collection.id}
       to={`/collections/${collection.handle}`}
       prefetch="intent"
     >
       {collection?.image && (
-        <Image
-          alt={collection.image.altText || collection.title}
-          aspectRatio="1/1"
-          data={collection.image}
-          loading={index < 3 ? 'eager' : undefined}
-          sizes="(min-width: 45em) 400px, 100vw"
-        />
+        <div className="collection-item__image">
+          <Image
+            alt={collection.image.altText || collection.title}
+            aspectRatio="4/3"
+            data={collection.image}
+            loading={index < 3 ? 'eager' : undefined}
+            sizes="(min-width: 64em) 25vw, 50vw"
+          />
+        </div>
       )}
-      <h5>{collection.title}</h5>
+      <div className="collection-item__content">
+        <h3>{collection.title}</h3>
+        <p className="muted">View products</p>
+      </div>
     </Link>
   );
 }

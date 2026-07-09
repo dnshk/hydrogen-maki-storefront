@@ -1,5 +1,5 @@
 import {Suspense} from 'react';
-import {Await, NavLink} from 'react-router';
+import {Await, Link, NavLink} from 'react-router';
 import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
 
 interface FooterProps {
@@ -18,13 +18,32 @@ export function Footer({
       <Await resolve={footerPromise}>
         {(footer) => (
           <footer className="footer">
-            {footer?.menu && header.shop.primaryDomain?.url && (
-              <FooterMenu
-                menu={footer.menu}
-                primaryDomainUrl={header.shop.primaryDomain.url}
-                publicStoreDomain={publicStoreDomain}
-              />
-            )}
+            <div className="container-wide footer__grid">
+              <div className="footer__brand">
+                <Link className="footer__logo focus-ring" to="/">
+                  Certified Nutrition <span>Store</span>
+                </Link>
+                <p>
+                  A small, Canada-based supplement practice with
+                  practitioner-curated products and 1:1 nutrition consultations.
+                  Shipping across Canada and to Japan.
+                </p>
+              </div>
+              {header.shop.primaryDomain?.url && (
+                <FooterMenu
+                  menu={footer?.menu}
+                  primaryDomainUrl={header.shop.primaryDomain.url}
+                  publicStoreDomain={publicStoreDomain}
+                />
+              )}
+            </div>
+            <div className="container-wide footer__bottom">
+              <p>
+                © {new Date().getFullYear()} Certified Nutrition Store. All
+                rights reserved.
+              </p>
+              <p>Secure checkout by Shopify · Canada · Japan shipping options</p>
+            </div>
           </footer>
         )}
       </Await>
@@ -37,7 +56,7 @@ function FooterMenu({
   primaryDomainUrl,
   publicStoreDomain,
 }: {
-  menu: FooterQuery['menu'];
+  menu: FooterQuery['menu'] | undefined;
   primaryDomainUrl: FooterProps['header']['shop']['primaryDomain']['url'];
   publicStoreDomain: string;
 }) {
@@ -54,15 +73,21 @@ function FooterMenu({
             : item.url;
         const isExternal = !url.startsWith('/');
         return isExternal ? (
-          <a href={url} key={item.id} rel="noopener noreferrer" target="_blank">
+          <a
+            className="footer-menu-item focus-ring"
+            href={url}
+            key={item.id}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
             {item.title}
           </a>
         ) : (
           <NavLink
+            className="footer-menu-item focus-ring"
             end
             key={item.id}
             prefetch="intent"
-            style={activeLinkStyle}
             to={url}
           >
             {item.title}
@@ -80,7 +105,7 @@ const FALLBACK_FOOTER_MENU = {
       id: 'gid://shopify/MenuItem/461633060920',
       resourceId: 'gid://shopify/ShopPolicy/23358046264',
       tags: [],
-      title: 'Privacy Policy',
+      title: 'Privacy',
       type: 'SHOP_POLICY',
       url: '/policies/privacy-policy',
       items: [],
@@ -89,7 +114,7 @@ const FALLBACK_FOOTER_MENU = {
       id: 'gid://shopify/MenuItem/461633093688',
       resourceId: 'gid://shopify/ShopPolicy/23358013496',
       tags: [],
-      title: 'Refund Policy',
+      title: 'Returns',
       type: 'SHOP_POLICY',
       url: '/policies/refund-policy',
       items: [],
@@ -98,7 +123,7 @@ const FALLBACK_FOOTER_MENU = {
       id: 'gid://shopify/MenuItem/461633126456',
       resourceId: 'gid://shopify/ShopPolicy/23358111800',
       tags: [],
-      title: 'Shipping Policy',
+      title: 'Shipping',
       type: 'SHOP_POLICY',
       url: '/policies/shipping-policy',
       items: [],
@@ -107,23 +132,10 @@ const FALLBACK_FOOTER_MENU = {
       id: 'gid://shopify/MenuItem/461633159224',
       resourceId: 'gid://shopify/ShopPolicy/23358079032',
       tags: [],
-      title: 'Terms of Service',
+      title: 'Terms',
       type: 'SHOP_POLICY',
       url: '/policies/terms-of-service',
       items: [],
     },
   ],
 };
-
-function activeLinkStyle({
-  isActive,
-  isPending,
-}: {
-  isActive: boolean;
-  isPending: boolean;
-}) {
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'white',
-  };
-}
