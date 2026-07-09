@@ -38,6 +38,9 @@
   --transition-smooth: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   --aside-width: 440px;
   --header-height: 80px;
+  --page-hero-padding-y: 2.5rem;
+  --home-hero-padding-bottom: 5rem;
+  --home-hero-padding-bottom-lg: 8rem;
 }
 
 html {
@@ -528,13 +531,13 @@ aside main {
   align-items: center;
   display: grid;
   gap: 2.5rem;
-  padding-block: 3.5rem 5rem;
+  padding-block: var(--page-hero-padding-y) var(--home-hero-padding-bottom);
 }
 
 @media (min-width: 1024px) {
   .home-hero__grid {
     grid-template-columns: repeat(12, minmax(0, 1fr));
-    padding-block: 6rem 8rem;
+    padding-block: var(--page-hero-padding-y) var(--home-hero-padding-bottom-lg);
   }
 }
 
@@ -876,7 +879,7 @@ aside main {
 .page-hero {
   background-image: var(--gradient-soft);
   border-bottom: 1px solid hsl(var(--border) / 0.6);
-  padding-block: 2.5rem;
+  padding-block: var(--page-hero-padding-y);
 }
 
 .page-hero h1,
