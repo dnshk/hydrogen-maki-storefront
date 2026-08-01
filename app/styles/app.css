@@ -45,6 +45,7 @@
   --hero-copy-font-size: 1.05rem;
   --hero-copy-line-height: 1.75;
   --section-heading-line-height: 1.12;
+  --section-kicker-heading-gap: 1.25rem;
   --product-card-image-padding: clamp(1rem, 4vw, 2rem);
 }
 
@@ -685,7 +686,16 @@ aside main {
 .section-heading h2 {
   font-size: clamp(2rem, 4vw, 2.6rem);
   line-height: var(--section-heading-line-height);
-  margin: 0.8rem 0 0;
+  margin: var(--section-kicker-heading-gap) 0 0;
+}
+
+.section-block > .badge-soft + h2,
+.section-block > div > .badge-soft + h2,
+.section-block > .badge-soft + h3,
+.section-block > div > .badge-soft + h3 {
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  line-height: var(--section-heading-line-height);
+  margin: var(--section-kicker-heading-gap) 0 0;
 }
 
 .section-heading p,
@@ -799,6 +809,26 @@ aside main {
   font-family: Fraunces, Georgia, serif;
   font-size: 1.6rem;
   margin-top: 0.5rem;
+}
+
+.consultation-card p {
+  line-height: 1.65;
+  margin: 0.85rem 0 0;
+}
+
+.consultation-card .button-secondary {
+  align-self: flex-start;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .consultation-card .button-secondary {
+    margin-top: auto;
+  }
+
+  .consultation-card p {
+    margin-bottom: 1.25rem;
+  }
 }
 
 .consultation-image {
@@ -1320,6 +1350,97 @@ aside main {
   color: hsl(var(--primary));
   text-decoration: underline;
   text-underline-offset: 4px;
+}
+
+/* Root error / 404 */
+.route-error {
+  align-items: center;
+  background-image: var(--gradient-hero);
+  display: flex;
+  min-height: 100vh;
+  padding: 2rem 1.5rem;
+}
+
+.route-error__card {
+  background: hsl(var(--card) / 0.88);
+  border: 1px solid hsl(var(--border) / 0.7);
+  border-radius: 2rem;
+  box-shadow: var(--shadow-elegant);
+  margin-inline: auto;
+  max-width: 46rem;
+  padding: clamp(2rem, 5vw, 4rem);
+  position: relative;
+  text-align: center;
+}
+
+.route-error__card::before {
+  background: hsl(var(--primary-soft) / 0.72);
+  border-radius: 999px;
+  content: "";
+  filter: blur(42px);
+  height: 12rem;
+  left: 50%;
+  position: absolute;
+  top: -4rem;
+  transform: translateX(-50%);
+  width: 12rem;
+  z-index: -1;
+}
+
+.route-error h1 {
+  font-size: clamp(2.4rem, 7vw, 4.25rem);
+  line-height: var(--hero-heading-line-height);
+  margin: 1.25rem 0 0;
+}
+
+.route-error__card > p {
+  color: hsl(var(--foreground) / 0.75);
+  font-size: var(--hero-copy-font-size);
+  line-height: var(--hero-copy-line-height);
+  margin: 1.25rem auto 0;
+  max-width: 34rem;
+}
+
+.route-error__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.route-error__support {
+  border-top: 1px solid hsl(var(--border) / 0.65);
+  color: hsl(var(--muted-foreground));
+  font-size: 0.92rem;
+  line-height: 1.7;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+}
+
+.route-error__support p {
+  margin: 0;
+}
+
+.route-error__details {
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.route-error__details summary {
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.route-error__details pre {
+  background: hsl(var(--secondary));
+  border-radius: 1rem;
+  color: hsl(var(--foreground));
+  margin-top: 0.75rem;
+  overflow-x: auto;
+  padding: 1rem;
+  white-space: pre-wrap;
 }
 
 /* Account/order legacy surfaces */

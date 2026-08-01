@@ -1,18 +1,15 @@
 import {Suspense} from 'react';
 import {Await, Link, useLoaderData} from 'react-router';
-import {Image} from '@shopify/hydrogen';
 import type {Route} from './+types/_index';
-import type {
-  FeaturedCollectionFragment,
-  RecommendedProductsQuery,
-} from 'storefrontapi.generated';
+import type {RecommendedProductsQuery} from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
-import heroBotanical from '~/assets/hero-botanical.jpg';
+import {BookingButton} from '~/components/booking/BookingButton';
+import heroImage from '~/assets/choosing-supplement.jpg';
 import consultationFlatlay from '~/assets/consultation-flatlay.jpg';
 
 export const meta: Route.MetaFunction = () => {
   return [
-    {title: 'Certified Nutrition Store — Practitioner-guided supplements'},
+    {title: 'Maki Nutrition — Practitioner-guided supplements'},
     {
       name: 'description',
       content:
@@ -23,32 +20,18 @@ export const meta: Route.MetaFunction = () => {
 
 export async function loader(args: Route.LoaderArgs) {
   const deferredData = loadDeferredData(args);
-  const criticalData = await loadCriticalData(args);
 
-  return {...deferredData, ...criticalData};
-}
-
-async function loadCriticalData({context}: Route.LoaderArgs) {
-  const [{collections}] = await Promise.all([
-    context.storefront.query(FEATURED_COLLECTION_QUERY),
-  ]);
-
-  return {
-    featuredCollection: collections.nodes[0],
-  };
+  return {...deferredData};
 }
 
 function loadDeferredData({context}: Route.LoaderArgs) {
-  const recommendedProducts = context.storefront
-    .query(RECOMMENDED_PRODUCTS_QUERY)
-    .catch((error: Error) => {
-      console.error(error);
-      return null;
-    });
-
   return {
-    recommendedProducts,
+    recommendedProducts: getRecommendedProducts(context.storefront),
   };
+}
+
+function getRecommendedProducts(contextStorefront: Route.LoaderArgs['context']['storefront']) {
+  return contextStorefront.query(RECOMMENDED_PRODUCTS_QUERY).catch(() => null);
 }
 
 export default function Homepage() {
@@ -87,7 +70,7 @@ export default function Homepage() {
               alt="Botanical illustration of herbs and leaves"
               className="shadow-elegant"
               height="1100"
-              src={heroBotanical}
+              src={heroImage}
               width="1600"
             />
           </div>
@@ -97,7 +80,6 @@ export default function Homepage() {
       <ShopByGoal />
       <RecommendedProducts products={data.recommendedProducts} />
       <ConsultationTeaser />
-      <FeaturedCollection collection={data.featuredCollection} />
     </div>
   );
 }
@@ -183,13 +165,20 @@ function RecommendedProducts({
         <Suspense fallback={<div className="empty-state">Loading products…</div>}>
           <Await resolve={products}>
             {(response) => (
-              <div className="product-grid" style={{marginTop: '2.5rem'}}>
-                {response
-                  ? response.products.nodes.map((product) => (
-                      <ProductItem key={product.id} product={product} />
-                    ))
-                  : null}
-              </div>
+              response?.products.nodes.length ? (
+                <div className="product-grid" style={{marginTop: '2.5rem'}}>
+                  {response.products.nodes.map((product) => (
+                    <ProductItem key={product.id} product={product} />
+                  ))}
+                </div>
+              ) : (
+                <div className="empty-state">
+                  <p>Featured supplements are temporarily unavailable.</p>
+                  <Link className="button-secondary focus-ring" to="/collections/all">
+                    Browse catalog
+                  </Link>
+                </div>
+              )
             )}
           </Await>
         </Suspense>
@@ -212,15 +201,19 @@ function ConsultationTeaser() {
         <div className="consultation-cards">
           <ConsultationCard
             body="A relaxed intake to map goals, history, and a realistic next step."
+            bookingEvent="initialConsultation"
+            bookingLabel="Book initial consultation"
             price="$140 CAD"
             subtitle="60 min · online"
             title="Initial Consultation"
           />
           <ConsultationCard
-            body="Bring your current shelf. We’ll review interactions, gaps, and what to keep."
-            price="$70 CAD"
-            subtitle="30 min · online"
-            title="Supplement Review"
+            body="A relaxed first step to ask questions, talk through goals, and decide whether 1:1 support is the right fit."
+            bookingEvent="discovery"
+            bookingLabel="Book free discovery call"
+            price="Free"
+            subtitle="15–30 min · online"
+            title="Discovery Call"
           />
         </div>
       </div>
@@ -237,11 +230,15 @@ function ConsultationTeaser() {
 }
 
 function ConsultationCard({
+  bookingEvent,
+  bookingLabel,
   body,
   price,
   subtitle,
   title,
 }: {
+  bookingEvent: 'discovery' | 'initialConsultation';
+  bookingLabel: string;
   body: string;
   price: string;
   subtitle: string;
@@ -253,79 +250,16 @@ function ConsultationCard({
       <h3>{title}</h3>
       <div className="consultation-card__price">{price}</div>
       <p className="muted">{body}</p>
-      <Link className="button-secondary focus-ring" to="/pages/consultation">
-        Learn more
-      </Link>
+      <BookingButton
+        className="button-secondary focus-ring"
+        event={bookingEvent}
+        source={`homepage-${bookingEvent}-card`}
+      >
+        {bookingLabel}
+      </BookingButton>
     </div>
   );
 }
-
-function FeaturedCollection({
-  collection,
-}: {
-  collection: FeaturedCollectionFragment;
-}) {
-  if (!collection) return null;
-  const image = collection?.image;
-
-  return (
-    <section className="container-wide section-block">
-      <div className="section-heading">
-        <div>
-          <span className="badge-soft">Featured collection</span>
-          <h2>{collection.title}</h2>
-        </div>
-        <Link
-          className="button-secondary focus-ring"
-          to={`/collections/${collection.handle}`}
-        >
-          Browse collection
-        </Link>
-      </div>
-      <Link
-        className="collection-item surface-card focus-ring"
-        to={`/collections/${collection.handle}`}
-      >
-        {image && (
-          <div className="collection-item__image">
-            <Image
-              data={image}
-              sizes="(min-width: 64em) 50vw, 100vw"
-              alt={image.altText || collection.title}
-            />
-          </div>
-        )}
-        <div className="collection-item__content">
-          <h3>{collection.title}</h3>
-          <p className="muted">Practitioner-selected products from the shop.</p>
-        </div>
-      </Link>
-    </section>
-  );
-}
-
-const FEATURED_COLLECTION_QUERY = `#graphql
-  fragment FeaturedCollection on Collection {
-    id
-    title
-    image {
-      id
-      url
-      altText
-      width
-      height
-    }
-    handle
-  }
-  query FeaturedCollection($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...FeaturedCollection
-      }
-    }
-  }
-` as const;
 
 const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   fragment RecommendedProduct on Product {

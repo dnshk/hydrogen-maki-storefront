@@ -21,7 +21,7 @@ export function Footer({
             <div className="container-wide footer__grid">
               <div className="footer__brand">
                 <Link className="footer__logo focus-ring" to="/">
-                  Certified Nutrition <span>Store</span>
+                  Maki <span>Nutrition Store</span>
                 </Link>
                 <p>
                   A small, Canada-based supplement practice with
@@ -39,7 +39,7 @@ export function Footer({
             </div>
             <div className="container-wide footer__bottom">
               <p>
-                © {new Date().getFullYear()} Certified Nutrition Store. All
+                © {new Date().getFullYear()} Maki Nutrition. All
                 rights reserved.
               </p>
               <p>Secure checkout by Shopify · Canada · Japan shipping options</p>
