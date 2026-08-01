@@ -14,8 +14,11 @@ import {
   SearchFormPredictive,
 } from '~/components/SearchFormPredictive';
 import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
+import {CalBookingProvider} from '~/components/booking/CalBookingProvider';
+import type {BookingConfig} from '~/components/booking/booking.types';
 
 interface PageLayoutProps {
+  bookingConfig: BookingConfig;
   cart: Promise<CartApiQueryFragment | null>;
   footer: Promise<FooterQuery | null>;
   header: HeaderQuery;
@@ -25,6 +28,7 @@ interface PageLayoutProps {
 }
 
 export function PageLayout({
+  bookingConfig,
   cart,
   children = null,
   footer,
@@ -34,31 +38,33 @@ export function PageLayout({
 }: PageLayoutProps) {
   return (
     <Aside.Provider>
-      <CartAside cart={cart} />
-      <SearchAside />
-      <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
-      <div className="site-shell">
-        <a href="#main" className="skip-link">
-          Skip to content
-        </a>
-        <AnnouncementBar />
-        {header && (
-          <Header
+      <CalBookingProvider bookingConfig={bookingConfig}>
+        <CartAside cart={cart} />
+        <SearchAside />
+        <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
+        <div className="site-shell">
+          <a href="#main" className="skip-link">
+            Skip to content
+          </a>
+          <AnnouncementBar />
+          {header && (
+            <Header
+              header={header}
+              cart={cart}
+              isLoggedIn={isLoggedIn}
+              publicStoreDomain={publicStoreDomain}
+            />
+          )}
+          <main id="main" className="site-main">
+            {children}
+          </main>
+          <Footer
+            footer={footer}
             header={header}
-            cart={cart}
-            isLoggedIn={isLoggedIn}
             publicStoreDomain={publicStoreDomain}
           />
-        )}
-        <main id="main" className="site-main">
-          {children}
-        </main>
-        <Footer
-          footer={footer}
-          header={header}
-          publicStoreDomain={publicStoreDomain}
-        />
-      </div>
+        </div>
+      </CalBookingProvider>
     </Aside.Provider>
   );
 }

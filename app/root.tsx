@@ -1,5 +1,6 @@
 import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
 import {
+  Link,
   Outlet,
   useRouteError,
   isRouteErrorResponse,
@@ -17,6 +18,7 @@ import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
+import {createBookingConfig} from '~/components/booking/booking.config';
 
 export type RootLoader = typeof loader;
 
@@ -78,6 +80,7 @@ export async function loader(args: Route.LoaderArgs) {
   return {
     ...deferredData,
     ...criticalData,
+    bookingConfig: createBookingConfig(env),
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
     shop: getShopAnalytics({
       storefront,
@@ -197,15 +200,42 @@ export function ErrorBoundary() {
     errorMessage = error.message;
   }
 
+  const isNotFound = errorStatus === 404;
+  const eyebrow = isNotFound ? '404' : `${errorStatus}`;
+  const title = isNotFound
+    ? 'We couldn’t find that page.'
+    : 'Something went wrong.';
+  const copy = isNotFound
+    ? 'The page may have moved, the link may be outdated, or the product may no longer be available.'
+    : 'Please try again, or return to the storefront while we recover this page.';
+
   return (
-    <div className="route-error">
-      <h1>Oops</h1>
-      <h2>{errorStatus}</h2>
-      {errorMessage && (
-        <fieldset>
-          <pre>{errorMessage}</pre>
-        </fieldset>
-      )}
-    </div>
+    <main className="route-error" role="main">
+      <section className="route-error__card">
+        <span className="badge-soft">{eyebrow}</span>
+        <h1>{title}</h1>
+        <p>{copy}</p>
+        <div className="route-error__actions">
+          <Link className="button-primary focus-ring" to="/">
+            Return home
+          </Link>
+          <Link className="button-secondary focus-ring" to="/collections/all">
+            Shop catalog
+          </Link>
+        </div>
+        <div className="route-error__support">
+          <p>
+            Need help finding a supplement or consultation page? Try search from
+            the header, or browse the catalog.
+          </p>
+        </div>
+        {!isNotFound && errorMessage ? (
+          <details className="route-error__details">
+            <summary>Technical details</summary>
+            <pre>{errorMessage}</pre>
+          </details>
+        ) : null}
+      </section>
+    </main>
   );
 }

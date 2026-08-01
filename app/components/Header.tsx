@@ -28,7 +28,7 @@ export function Header({
     <header className="header">
       <div className="container-wide header__inner">
         <NavLink className="header__logo focus-ring" prefetch="intent" to="/" end>
-          Certified Nutrition <span>Store</span>
+          Maki <span>Nutrition Store</span>
           <span className="sr-only">, {shop.name}</span>
         </NavLink>
         <HeaderMenu
