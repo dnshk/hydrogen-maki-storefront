@@ -3,6 +3,7 @@ import {Await, Link, useLoaderData} from 'react-router';
 import type {Route} from './+types/_index';
 import type {RecommendedProductsQuery} from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
+import {ResourceLoadingSkeleton} from '~/components/PaginatedResourceSection';
 import {BookingButton} from '~/components/booking/BookingButton';
 import heroImage from '~/assets/choosing-supplement.jpg';
 import consultationFlatlay from '~/assets/consultation-flatlay.jpg';
@@ -162,7 +163,19 @@ function RecommendedProducts({
             View all
           </Link>
         </div>
-        <Suspense fallback={<div className="empty-state">Loading products…</div>}>
+        <Suspense
+          fallback={
+            <div
+              aria-label="Featured supplements are loading"
+              className="product-grid"
+              role="status"
+              style={{marginTop: '2.5rem'}}
+            >
+              <span className="sr-only">Loading featured supplements</span>
+              <ResourceLoadingSkeleton />
+            </div>
+          }
+        >
           <Await resolve={products}>
             {(response) => (
               response?.products.nodes.length ? (

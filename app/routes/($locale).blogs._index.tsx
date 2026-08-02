@@ -1,7 +1,7 @@
 import {Link, useLoaderData} from 'react-router';
 import type {Route} from './+types/blogs._index';
-import {getPaginationVariables} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
+import {getInfiniteScrollPaginationVariables} from '~/lib/pagination';
 import type {BlogsQuery} from 'storefrontapi.generated';
 
 type BlogNode = BlogsQuery['blogs']['nodes'][0];
@@ -25,7 +25,7 @@ export async function loader(args: Route.LoaderArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context, request}: Route.LoaderArgs) {
-  const paginationVariables = getPaginationVariables(request, {
+  const paginationVariables = getInfiniteScrollPaginationVariables(request, {
     pageBy: 10,
   });
 
@@ -57,7 +57,11 @@ export default function Blogs() {
     <div className="blogs">
       <h1>Blogs</h1>
       <div className="blogs-grid">
-        <PaginatedResourceSection<BlogNode> connection={blogs}>
+        <PaginatedResourceSection<BlogNode>
+          connection={blogs}
+          connectionPath="blogs"
+          getResourceKey={(blog) => blog.handle}
+        >
           {({node: blog}) => (
             <Link
               className="blog"

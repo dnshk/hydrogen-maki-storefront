@@ -1,9 +1,10 @@
 import {Link, useLoaderData} from 'react-router';
 import type {Route} from './+types/blogs.$blogHandle._index';
-import {Image, getPaginationVariables} from '@shopify/hydrogen';
+import {Image} from '@shopify/hydrogen';
 import type {ArticleItemFragment} from 'storefrontapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {getInfiniteScrollPaginationVariables} from '~/lib/pagination';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [{title: `Hydrogen | ${data?.blog.title ?? ''} blog`}];
@@ -24,7 +25,7 @@ export async function loader(args: Route.LoaderArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context, request, params}: Route.LoaderArgs) {
-  const paginationVariables = getPaginationVariables(request, {
+  const paginationVariables = getInfiniteScrollPaginationVariables(request, {
     pageBy: 4,
   });
 
@@ -68,7 +69,10 @@ export default function Blog() {
     <div className="blog">
       <h1>{blog.title}</h1>
       <div className="blog-grid">
-        <PaginatedResourceSection<ArticleItemFragment> connection={articles}>
+        <PaginatedResourceSection<ArticleItemFragment>
+          connection={articles}
+          connectionPath="blog.articles"
+        >
           {({node: article, index}) => (
             <ArticleItem
               article={article}

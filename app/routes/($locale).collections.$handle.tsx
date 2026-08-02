@@ -1,9 +1,10 @@
 import {redirect, useLoaderData} from 'react-router';
 import type {Route} from './+types/collections.$handle';
-import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
+import {Analytics} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ProductItem} from '~/components/ProductItem';
+import {getInfiniteScrollPaginationVariables} from '~/lib/pagination';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = ({data}) => {
@@ -33,7 +34,7 @@ export async function loader(args: Route.LoaderArgs) {
 async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
   const {handle} = params;
   const {storefront} = context;
-  const paginationVariables = getPaginationVariables(request, {
+  const paginationVariables = getInfiniteScrollPaginationVariables(request, {
     pageBy: 8,
   });
 
@@ -92,6 +93,7 @@ export default function Collection() {
       <section className="container-wide collection">
         <PaginatedResourceSection<ProductItemFragment>
           connection={collection.products}
+          connectionPath="collection.products"
           resourcesClassName="products-grid"
         >
           {({node: product, index}) => (

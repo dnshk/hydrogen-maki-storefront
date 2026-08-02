@@ -898,6 +898,70 @@ aside main {
   padding: 1rem 0.25rem 0;
 }
 
+.resource-skeleton {
+  display: block;
+}
+
+.resource-skeleton__media,
+.resource-skeleton__line {
+  animation: skeleton-shimmer 1.2s ease-in-out infinite;
+  background:
+    linear-gradient(
+      90deg,
+      hsl(var(--muted)) 0%,
+      hsl(var(--background)) 48%,
+      hsl(var(--muted)) 100%
+    );
+  background-size: 220% 100%;
+}
+
+.resource-skeleton__media {
+  aspect-ratio: 1 / 1;
+  border-radius: 1.5rem;
+}
+
+.collections-grid .resource-skeleton__media {
+  aspect-ratio: 4 / 3;
+}
+
+.resource-skeleton__body {
+  padding: 1rem 0.25rem 0;
+}
+
+.resource-skeleton__line {
+  border-radius: 999px;
+  height: 0.85rem;
+}
+
+.resource-skeleton__line + .resource-skeleton__line {
+  margin-top: 0.6rem;
+}
+
+.resource-skeleton__line--title {
+  width: 82%;
+}
+
+.resource-skeleton__line--short {
+  width: 38%;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 120% 0;
+  }
+
+  100% {
+    background-position: -120% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resource-skeleton__media,
+  .resource-skeleton__line {
+    animation: none;
+  }
+}
+
 .product-item h3,
 .product-item h4,
 .collection-item h3 {
@@ -926,6 +990,43 @@ aside main {
 
 .collection-item__content {
   padding: 1.25rem;
+}
+
+.pagination-infinite {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding-top: 2rem;
+}
+
+.pagination-infinite__sentinel {
+  height: 1px;
+  width: 100%;
+}
+
+.pagination-infinite__status {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.9rem;
+}
+
+.pagination-infinite__load-more {
+  align-items: center;
+  background: hsl(var(--foreground));
+  border-radius: 999px;
+  color: hsl(var(--background));
+  display: inline-flex;
+  font-weight: 700;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.75rem 1.4rem;
+  text-decoration: none;
+}
+
+.pagination-infinite__load-more:hover {
+  background: hsl(var(--primary));
 }
 
 /* Collections */
