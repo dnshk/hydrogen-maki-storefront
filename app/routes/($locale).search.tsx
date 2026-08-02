@@ -1,6 +1,6 @@
 import {useLoaderData} from 'react-router';
 import type {Route} from './+types/search';
-import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
+import {Analytics} from '@shopify/hydrogen';
 import {SearchForm} from '~/components/SearchForm';
 import {SearchResults} from '~/components/SearchResults';
 import {
@@ -8,6 +8,7 @@ import {
   type PredictiveSearchReturn,
   getEmptyPredictiveSearchResult,
 } from '~/lib/search';
+import {getInfiniteScrollPaginationVariables} from '~/lib/pagination';
 import type {
   RegularSearchQuery,
   PredictiveSearchQuery,
@@ -230,7 +231,7 @@ async function regularSearch({
 >): Promise<RegularSearchReturn> {
   const {storefront} = context;
   const url = new URL(request.url);
-  const variables = getPaginationVariables(request, {pageBy: 8});
+  const variables = getInfiniteScrollPaginationVariables(request, {pageBy: 8});
   const term = String(url.searchParams.get('q') || '');
 
   // Search articles, pages, and products for the `q` term

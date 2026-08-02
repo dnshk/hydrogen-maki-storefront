@@ -1,8 +1,9 @@
 import {useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/collections._index';
-import {getPaginationVariables, Image} from '@shopify/hydrogen';
+import {Image} from '@shopify/hydrogen';
 import type {CollectionFragment} from 'storefrontapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
+import {getInfiniteScrollPaginationVariables} from '~/lib/pagination';
 
 export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
@@ -19,7 +20,7 @@ export async function loader(args: Route.LoaderArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context, request}: Route.LoaderArgs) {
-  const paginationVariables = getPaginationVariables(request, {
+  const paginationVariables = getInfiniteScrollPaginationVariables(request, {
     pageBy: 4,
   });
 
@@ -60,6 +61,7 @@ export default function Collections() {
       <section className="container-wide collections">
         <PaginatedResourceSection<CollectionFragment>
           connection={collections}
+          connectionPath="collections"
           resourcesClassName="collections-grid"
         >
           {({node: collection, index}) => (

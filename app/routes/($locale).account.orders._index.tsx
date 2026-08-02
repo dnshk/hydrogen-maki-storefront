@@ -6,11 +6,7 @@ import {
 } from 'react-router';
 import type {Route} from './+types/account.orders._index';
 import {useRef} from 'react';
-import {
-  Money,
-  getPaginationVariables,
-  flattenConnection,
-} from '@shopify/hydrogen';
+import {Money, flattenConnection} from '@shopify/hydrogen';
 import {
   buildOrderSearchQuery,
   parseOrderFilters,
@@ -23,6 +19,7 @@ import type {
   OrderItemFragment,
 } from 'customer-accountapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
+import {getInfiniteScrollPaginationVariables} from '~/lib/pagination';
 
 type OrdersLoaderData = {
   customer: CustomerOrdersFragment;
@@ -35,7 +32,7 @@ export const meta: Route.MetaFunction = () => {
 
 export async function loader({request, context}: Route.LoaderArgs) {
   const {customerAccount} = context;
-  const paginationVariables = getPaginationVariables(request, {
+  const paginationVariables = getInfiniteScrollPaginationVariables(request, {
     pageBy: 20,
   });
 
@@ -82,7 +79,10 @@ function OrdersTable({
   return (
     <div className="acccount-orders" aria-live="polite">
       {orders?.nodes.length ? (
-        <PaginatedResourceSection connection={orders}>
+        <PaginatedResourceSection
+          connection={orders}
+          connectionPath="customer.orders"
+        >
           {({node: order}) => <OrderItem key={order.id} order={order} />}
         </PaginatedResourceSection>
       ) : (

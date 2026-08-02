@@ -1,8 +1,8 @@
 import type {Route} from './+types/collections.all';
 import {useLoaderData} from 'react-router';
-import {getPaginationVariables} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {ProductItem} from '~/components/ProductItem';
+import {getInfiniteScrollPaginationVariables} from '~/lib/pagination';
 import type {CollectionItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = () => {
@@ -31,7 +31,7 @@ export async function loader(args: Route.LoaderArgs) {
  */
 async function loadCriticalData({context, request}: Route.LoaderArgs) {
   const {storefront} = context;
-  const paginationVariables = getPaginationVariables(request, {
+  const paginationVariables = getInfiniteScrollPaginationVariables(request, {
     pageBy: 8,
   });
 
@@ -70,6 +70,7 @@ export default function Collection() {
       <section className="container-wide collection">
         <PaginatedResourceSection<CollectionItemFragment>
           connection={products}
+          connectionPath="products"
           resourcesClassName="products-grid"
         >
           {({node: product, index}) => (
