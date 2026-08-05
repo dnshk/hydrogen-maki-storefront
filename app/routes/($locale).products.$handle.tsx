@@ -11,6 +11,7 @@ import {
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
+import {ProductDescriptionTabs} from '~/components/ProductDescriptionTabs';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: Route.MetaFunction = ({data}) => {
@@ -105,6 +106,44 @@ export default function Product() {
   });
 
   const {title, descriptionHtml, vendor} = product;
+  const productDescriptionSections = [
+    {
+      id: 'overview',
+      title: 'Overview',
+      metafield: product.shortDescription,
+      fallbackHtml: descriptionHtml,
+    },
+    {
+      id: 'key-benefits',
+      title: 'Key Benefits',
+      metafield: product.keyBenefits,
+    },
+    {
+      id: 'ingredients',
+      title: 'Ingredients',
+      metafield: product.ingredients,
+    },
+    {
+      id: 'suggested-use',
+      title: 'Suggested Use',
+      metafield: product.suggestedUse,
+    },
+    {
+      id: 'recommended-use',
+      title: 'Recommended Use',
+      metafield: product.recommendedUse,
+    },
+    {
+      id: 'cautions',
+      title: 'Cautions',
+      metafield: product.cautionsAndWarnings,
+    },
+    {
+      id: 'non-medical-ingredients',
+      title: 'Non-Medical Ingredients',
+      metafield: product.nonMedicalIngredients,
+    },
+  ];
 
   return (
     <div className="container-wide product">
@@ -116,10 +155,7 @@ export default function Product() {
           price={selectedVariant?.price}
           compareAtPrice={selectedVariant?.compareAtPrice}
         />
-        <div
-          className="product-description"
-          dangerouslySetInnerHTML={{__html: descriptionHtml}}
-        />
+        <ProductDescriptionTabs sections={productDescriptionSections} />
         <ProductForm
           productOptions={productOptions}
           selectedVariant={selectedVariant}
@@ -199,6 +235,34 @@ const PRODUCT_FRAGMENT = `#graphql
     handle
     descriptionHtml
     description
+    shortDescription: metafield(namespace: "custom", key: "short_description") {
+      type
+      value
+    }
+    keyBenefits: metafield(namespace: "custom", key: "key_benefits") {
+      type
+      value
+    }
+    ingredients: metafield(namespace: "custom", key: "ingredients") {
+      type
+      value
+    }
+    suggestedUse: metafield(namespace: "custom", key: "suggested_use") {
+      type
+      value
+    }
+    recommendedUse: metafield(namespace: "custom", key: "recommended_use") {
+      type
+      value
+    }
+    cautionsAndWarnings: metafield(namespace: "custom", key: "cautions_and_warnings") {
+      type
+      value
+    }
+    nonMedicalIngredients: metafield(namespace: "custom", key: "non_medical_ingredients") {
+      type
+      value
+    }
     encodedVariantExistence
     encodedVariantAvailability
     options {

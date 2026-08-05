@@ -412,6 +412,13 @@ textarea:focus-visible {
   transition: color 160ms ease;
 }
 
+.footer-menu button.footer-menu-item {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  text-align: left;
+}
+
 .footer-menu a:hover,
 .footer-menu-item:hover {
   color: hsl(var(--primary));
@@ -1184,6 +1191,53 @@ aside main {
   margin-top: 1.25rem;
 }
 
+.product-description-tabs {
+  margin-top: 1.35rem;
+}
+
+.product-description-tabs__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.75rem;
+}
+
+.product-description-tabs__tab {
+  background: transparent;
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  color: hsl(var(--muted-foreground));
+  flex: 1 1 max-content;
+  font-size: 0.86rem;
+  font-weight: 700;
+  min-width: max-content;
+  padding: 0.65rem 0.9rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.product-description-tabs__tab[aria-selected="true"] {
+  background: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.product-description-tabs__tab:hover:not([aria-selected="true"]) {
+  border-color: hsl(var(--primary) / 0.45);
+  color: hsl(var(--foreground));
+}
+
+.product-description-tabs__panel {
+  margin-top: 1rem;
+}
+
+.product-description-tabs__panel p {
+  margin: 0;
+}
+
+.product-description-tabs__panel p + p {
+  margin-top: 0.85rem;
+}
+
 .product-form {
   margin-top: 1.75rem;
 }
@@ -1386,14 +1440,28 @@ aside main {
 /* Search */
 .predictive-search {
   display: grid;
-  gap: 1rem;
+  gap: 1.25rem;
+}
+
+.predictive-search-form {
+  display: grid;
+  gap: 0.8rem;
 }
 
 .predictive-search input,
-.predictive-search button {
+.search input {
+  background: hsl(var(--card));
   border: 1px solid hsl(var(--border));
   border-radius: 999px;
-  padding: 0.7rem 0.95rem;
+  min-width: 0;
+  padding: 0.85rem 1rem;
+}
+
+.predictive-search button,
+.search button {
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  padding: 0.85rem 1.1rem;
 }
 
 .predictive-search button,
@@ -1404,16 +1472,45 @@ aside main {
   font-weight: 700;
 }
 
+@media (min-width: 36rem) {
+  .predictive-search-form {
+    align-items: center;
+    display: flex;
+  }
+
+  .predictive-search-form input {
+    flex: 1 1 auto;
+  }
+
+  .predictive-search-form button {
+    flex: 0 0 auto;
+  }
+}
+
 .search form {
-  display: flex;
-  gap: 0.65rem;
+  display: grid;
+  gap: 0.8rem;
   margin-top: 1.5rem;
   max-width: 42rem;
 }
 
 .search input {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
+}
+
+@media (min-width: 36rem) {
+  .search form {
+    align-items: center;
+    display: flex;
+  }
+
+  .search input {
+    flex: 1 1 auto;
+  }
+
+  .search button {
+    flex: 0 0 auto;
+  }
 }
 
 .search-result {

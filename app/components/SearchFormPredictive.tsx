@@ -64,6 +64,12 @@ export function SearchFormPredictive({
     inputRef?.current?.setAttribute('type', 'search');
   }, []);
 
+  useEffect(() => {
+    if (aside.type === 'search') {
+      inputRef.current?.focus();
+    }
+  }, [aside.type]);
+
   if (typeof children !== 'function') {
     return null;
   }
