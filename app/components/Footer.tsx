@@ -1,6 +1,7 @@
 import {Suspense} from 'react';
 import {Await, Link, NavLink} from 'react-router';
 import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
+import {useAside} from '~/components/Aside';
 
 interface FooterProps {
   footer: Promise<FooterQuery | null>;
@@ -60,6 +61,8 @@ function FooterMenu({
   primaryDomainUrl: FooterProps['header']['shop']['primaryDomain']['url'];
   publicStoreDomain: string;
 }) {
+  const {open} = useAside();
+
   return (
     <nav className="footer-menu" role="navigation">
       {(menu || FALLBACK_FOOTER_MENU).items.map((item) => {
@@ -72,6 +75,21 @@ function FooterMenu({
             ? new URL(item.url).pathname
             : item.url;
         const isExternal = !url.startsWith('/');
+        const isSearchLink = !isExternal && url === '/search';
+
+        if (isSearchLink) {
+          return (
+            <button
+              className="footer-menu-item focus-ring"
+              key={item.id}
+              onClick={() => open('search')}
+              type="button"
+            >
+              {item.title}
+            </button>
+          );
+        }
+
         return isExternal ? (
           <a
             className="footer-menu-item focus-ring"
